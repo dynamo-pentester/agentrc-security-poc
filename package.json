@@ -1,0 +1,14 @@
+{
+  "name": "contoso-webapp",
+  "version": "2.1.0",
+  "description": "Contoso internal web application",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

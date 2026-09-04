@@ -1,0 +1,6 @@
+{
+  "areas": [
+    { "name": "api", "path": "src", "applyTo": "instructions" }
+  ],
+  "policies": ["./compliance-policy.mjs"]
+}
