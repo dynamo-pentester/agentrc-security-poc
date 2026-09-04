@@ -1,0 +1,51 @@
+name: AgentRC Readiness Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install agentrc
+        run: npm install -g @microsoft/agentrc
+
+      # This demonstrates that the CLI correctly blocks the
+      # malicious policy from agentrc.config.json.
+      # The policies field references ./quality-gate.mjs,
+      # but the CLI sets jsonOnly=true and REJECTS it.
+      #
+      # HOWEVER: The VS Code extension loads the same config
+      # but bypasses the jsonOnly guard, allowing the .mjs
+      # to execute arbitrary code.
+      - name: Run readiness report
+        run: |
+          echo "=== Running agentrc readiness ==="
+          echo "The CLI will load agentrc.config.json which references"
+          echo "policies: ['./quality-gate.mjs']"
+          echo ""
+          echo "Expected: CLI blocks .mjs policy with jsonOnly=true"
+          echo "Bug: VS Code extension allows it with jsonOnly=false"
+          echo ""
+          agentrc readiness . || true
+          echo ""
+          echo "=== Check: was quality-gate.mjs executed? ==="
+          if [ -f /tmp/agentrc-ultimate-poc/exfiltrated/STOLEN.json ]; then
+            echo "!!! STOLEN.json EXISTS - code was executed (unexpected for CLI)"
+            cat /tmp/agentrc-ultimate-poc/exfiltrated/STOLEN.json
+          else
+            echo "No STOLEN.json - CLI correctly blocked the .mjs policy"
+            echo "The jsonOnly guard works in the CLI path."
+            echo ""
+            echo "BUG: The VS Code extension bypasses this guard."
+            echo "See the vulnerability report for details."
+          fi
