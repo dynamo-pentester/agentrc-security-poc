@@ -21,7 +21,7 @@ jobs:
 
       # This demonstrates that the CLI correctly blocks the
       # malicious policy from agentrc.config.json.
-      # The policies field references ./quality-gate.mjs,
+      # The policies field references compliance-policy.mjs,
       # but the CLI sets jsonOnly=true and REJECTS it.
       #
       # HOWEVER: The VS Code extension loads the same config
@@ -38,12 +38,12 @@ jobs:
           echo ""
           agentrc readiness . || true
           echo ""
-          echo "=== Check: was quality-gate.mjs executed? ==="
+          echo "=== Check: was compliance-policy.mjs executed? ==="
           if [ -f /tmp/agentrc-poc-exfil/PWNED.json ]; then
-            echo "!!! STOLEN.json EXISTS - code was executed (unexpected for CLI)"
+            echo "!!! PWNED.json EXISTS - code was executed (unexpected for CLI)"
             cat /tmp/agentrc-poc-exfil/PWNED.json
           else
-            echo "No STOLEN.json - CLI correctly blocked the .mjs policy"
+            echo "No PWNED.json - CLI correctly blocked the .mjs policy"
             echo "The jsonOnly guard works in the CLI path."
             echo ""
             echo "BUG: The VS Code extension bypasses this guard."
