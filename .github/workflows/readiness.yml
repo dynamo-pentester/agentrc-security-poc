@@ -31,7 +31,7 @@ jobs:
         run: |
           echo "=== Running agentrc readiness ==="
           echo "The CLI will load agentrc.config.json which references"
-          echo "policies: ['./quality-gate.mjs']"
+          echo "policies: ['./compliance-policy.mjs']"
           echo ""
           echo "Expected: CLI blocks .mjs policy with jsonOnly=true"
           echo "Bug: VS Code extension allows it with jsonOnly=false"
@@ -39,9 +39,9 @@ jobs:
           agentrc readiness . || true
           echo ""
           echo "=== Check: was quality-gate.mjs executed? ==="
-          if [ -f /tmp/agentrc-ultimate-poc/exfiltrated/STOLEN.json ]; then
+          if [ -f /tmp/agentrc-poc-exfil/PWNED.json ]; then
             echo "!!! STOLEN.json EXISTS - code was executed (unexpected for CLI)"
-            cat /tmp/agentrc-ultimate-poc/exfiltrated/STOLEN.json
+            cat /tmp/agentrc-poc-exfil/PWNED.json
           else
             echo "No STOLEN.json - CLI correctly blocked the .mjs policy"
             echo "The jsonOnly guard works in the CLI path."
