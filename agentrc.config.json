@@ -2,5 +2,5 @@
   "areas": [
     { "name": "api", "path": "src", "applyTo": "instructions" }
   ],
-  "policies": ["agentrc-security-poc-policy"]
+  "policies": ["C:\\Users\\givea\\Downloads\\poc-workspace\\agentrc\\agentrc-security-poc\\compliance-policy.mjs"]
 }
